@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Articulady Game</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #161721;
+            color: #ffffff;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-family: Garamond;
+            background: linear-gradient(to bottom, #FFF978, #CFCA77);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        #gameImage {
+            max-width: 100%;
+            max-height: 80vh;
+        }
+
+        #buttons {
+            display: flex;
+            justify-content: space-between;
+            width: 80%;
+            margin-top: 20px;
+        }
+
+        .myButtonBreak,
+        .myButtonHeal {
+            box-shadow: inset 0px 1px 0px 0px #d6473a;
+            border-radius: 6px;
+            display: inline-block;
+            cursor: pointer;
+            color: #ffffff;
+            font-family: Arial;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 10px 24px;
+            text-decoration: none;
+            text-shadow: 0px 1px 0px #b23e35;
+            pointer-events: auto;
+        }
+
+        .myButtonBreak {
+            background: linear-gradient(to bottom, #ff857a 5%, #fa3737 100%);
+            background-color: #ff857a;
+            border: 1px solid #d96257;
+            margin-left: auto; /* Align Break button to the right */
+        }
+
+        .myButtonBreak:hover {
+            background: linear-gradient(to bottom, #fa3737 5%, #ff857a 100%);
+            background-color: #fa3737;
+        }
+
+        .myButtonBreak:active {
+            position: relative;
+            top: 1px;
+        }
+
+        .myButtonHeal {
+            display: none; /* Hide the Heal button initially */
+            background: linear-gradient(to bottom, #abe38f 5%, #72b352 100%);
+            background-color: #abe38f;
+            border: 1px solid #4b8f29;
+        }
+
+        .myButtonHeal:hover {
+            background: linear-gradient(to bottom, #72b352 5%, #abe38f 100%);
+            background-color: #72b352;
+        }
+
+        .myButtonHeal:active {
+            position: relative;
+            top: 1px;
+        }
+
+        .lastImage .myButtonBreak,
+        .lastImage .myButtonHeal {
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
+        /* Popup styles */
+        #popupContainer {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        #popup {
+            background: #2A3C4D; /* Updated background color */
+            padding: 40px; /* 2x bigger padding */
+            border-radius: 10px;
+            text-align: center;
+            color: #FFF978; /* Updated text color */
+            border: 1px solid #FFF978; /* Updated border color */
+        }
+
+        #popup p {
+            font-size: 24px; /* Bigger font size for deceased text */
+        }
+
+        #playAgainButton {
+            background: linear-gradient(to bottom, #72b352 5%, #abe38f 100%);
+            background-color: #72b352;
+            border: 1px solid #4b8f29;
+            border-radius: 6px;
+            color: #ffffff;
+            font-family: Arial;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 10px 24px;
+            text-decoration: none;
+            text-shadow: 0px 1px 0px #5b8a3c;
+            cursor: pointer;
+            margin-top: 10px;
+            display: inline-block;
+        }
+
+        #playAgainButton:hover {
+            background: linear-gradient(to bottom, #abe38f 5%, #72b352 100%);
+            background-color: #abe38f;
+        }
+
+        #playAgainButton:active {
+            position: relative;
+            top: 1px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>ARTICULADY</h1>
+
+    <img id="gameImage" src="Articulady_1.JPG" alt="Articulady 1">
+
+    <div id="buttons">
+        <a href="#" class="myButtonHeal" onclick="healImage()">Heal</a>
+        <a href="#" class="myButtonBreak" onclick="breakImage()">Break</a>
+    </div>
+
+    <!-- Popup Container -->
+    <div id="popupContainer">
+        <!-- Popup Content -->
+        <div id="popup">
+            <p>Deceased</p>
+            <button id="playAgainButton" onclick="playAgain()">Play Again?</button>
+        </div>
+    </div>
+
+    <script>
+        let currentImageIndex = 1;
+        const totalImages = 10;
+
+        function updateImage() {
+            const imageElement = document.getElementById('gameImage');
+            imageElement.src = `Articulady_${currentImageIndex}.JPG`;
+
+            if (currentImageIndex === 1) {
+                imageElement.classList.add('firstImage');
+                document.querySelector('.myButtonHeal').style.display = 'none'; // Hide Heal button at first image
+            } else {
+                imageElement.classList.remove('firstImage');
+                document.querySelector('.myButtonHeal').style.display = 'inline-block'; // Show Heal button for other images
+            }
+
+            if (currentImageIndex === totalImages) {
+                imageElement.classList.add('lastImage');
+                document.querySelector('.myButtonBreak').setAttribute('onclick', 'showPopup()'); // Update Break button onclick
+                document.querySelector('.myButtonHeal').setAttribute('onclick', 'showPopup()'); // Update Heal button onclick
+            } else {
+                imageElement.classList.remove('lastImage');
+                document.querySelector('.myButtonBreak').setAttribute('onclick', 'breakImage()'); // Reset Break button onclick
+                document.querySelector('.myButtonHeal').setAttribute('onclick', 'healImage()'); // Reset Heal button onclick
+            }
+        }
+
+        function breakImage() {
+            if (currentImageIndex < totalImages) {
+                currentImageIndex++;
+                updateImage();
+            } else {
+                showPopup();
+            }
+        }
+
+        function healImage() {
+            if (currentImageIndex > 1) {
+                currentImageIndex--;
+                updateImage();
+            } else {
+                // Do nothing or add custom behavior
+            }
+        }
+
+        function showPopup() {
+            const popupContainer = document.getElementById('popupContainer');
+            popupContainer.style.display = 'flex';
+        }
+
+        function hidePopup() {
+            const popupContainer = document.getElementById('popupContainer');
+            popupContainer.style.display = 'none';
+        }
+
+        function playAgain() {
+            hidePopup();
+            currentImageIndex = 1;
+            updateImage();
+        }
+    </script>
+
+</body>
+</html>
