@@ -151,7 +151,7 @@
 
     <h1>ARTICULADY</h1>
 
-    <img id="gameImage" src="/Articulady_1.jpg" alt="Articulady 1">
+    <img id="gameImage" src="./Articulady_1.jpg" alt="Articulady">
 
     <div id="buttons">
         <a href="#" class="myButtonHeal" onclick="healImage()">Heal</a>
@@ -173,7 +173,7 @@
 
         function updateImage() {
             const imageElement = document.getElementById('gameImage');
-            imageElement.src = `/Articulady_${currentImageIndex}.jpg`;
+            imageElement.src = `./Articulady_${currentImageIndex}.jpg`;
 
             if (currentImageIndex === 1) {
                 imageElement.classList.add('firstImage');
